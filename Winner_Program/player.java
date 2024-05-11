@@ -11,17 +11,23 @@ public class player {
     private final ArrayList<Integer> durationList;
 
     public player (String playerName, String playerID, String startTime, String endTime, String raceType){
-        this.setPlayerName(playerName);
+        /*this.setPlayerName(playerName);
         this.setPlayerID(playerID);
         this.setStartTime(startTime);
         this.setEndTime(endTime);
-        this.setRaceType(raceType);
+        this.setRaceType(raceType);*/
+        this.playerName = playerName;
+        this.playerID = playerID;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.raceType = raceType;
+
         this.durationList = new ArrayList<>();
         this.addDuration(this.startTime, this.endTime);
     }
 
     public String getPlayerName() {
-        return playerName;
+        return this.playerName;
     }
 
     public void setPlayerName(String playerName) {
@@ -29,7 +35,7 @@ public class player {
     }
 
     public String getPlayerID() {
-        return playerID;
+        return this.playerID;
     }
 
     public void setPlayerID(String playerID) {
@@ -37,7 +43,7 @@ public class player {
     }
 
     public String getStartTime() {
-        return startTime;
+        return this.startTime;
     }
 
     public void setStartTime(String startTime) {
@@ -45,7 +51,7 @@ public class player {
     }
 
     public String getEndTime() {
-        return endTime;
+        return this.endTime;
     }
 
     public void setEndTime(String endTime) {
@@ -53,7 +59,7 @@ public class player {
     }
 
     public String getRaceType() {
-        return raceType;
+        return this.raceType;
     }
 
     public void setRaceType(String raceType) {
