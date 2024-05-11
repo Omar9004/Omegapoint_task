@@ -8,8 +8,7 @@ public class player {
     private String startTime;
     private String endTime;
     private String raceType;
-    private int tourCount;
-    private ArrayList<Integer> durationList;
+    private final ArrayList<Integer> durationList;
 
     public player (String playerName, String playerID, String startTime, String endTime, String raceType){
         this.setPlayerName(playerName);
@@ -17,7 +16,6 @@ public class player {
         this.setStartTime(startTime);
         this.setEndTime(endTime);
         this.setRaceType(raceType);
-        this.tourCount = 0 ;
         this.durationList = new ArrayList<>();
         this.addDuration(this.startTime, this.endTime);
     }
@@ -62,26 +60,17 @@ public class player {
         this.raceType = raceType;
     }
 
-    public int getTourCount() {
-        return tourCount;
-    }
-
-    public void setTourCount() {
-        this.tourCount++;
-    }
-    public int dCalc (){
-        Duration duration = Duration.between(LocalTime.parse(this.getStartTime()), LocalTime.parse(this.getEndTime()));
-        int durationInt = (int) duration.toMinutes();
-        this.durationList.add(durationInt);
-        return durationInt;
-    }
     public void addDuration (String startTime, String endTime){
         Duration duration = Duration.between(LocalTime.parse(startTime), LocalTime.parse(endTime));
         duration = duration.abs();
         this.durationList.add((int)duration.toMinutes());
     }
 
-    public int getAvgD (){
+    public int getAvgD () throws Exception {
+        if (this.durationList.isEmpty()){
+            throw new Exception("The duration list is Empty!!");
+        }
+
         int listLength= this.durationList.size();
         if( listLength>1){
             int sum = 0 ;
@@ -89,16 +78,19 @@ public class player {
                 sum += integer;
             }
              return sum/listLength;
-        } else if (listLength ==1) {
+        } else {
             return this.durationList.get(0);
         }
-        return 0;
     }
     public int getNumPart(){
         return this.durationList.size();
-    }
+    } // Return the participation number of the player.
 
     public String toString(){
-        return "[Player: "+ this.getPlayerName()+", PlayerID: "+this.getPlayerID()+", Participation Num: "+this.getNumPart()+", Average duration: "+this.getAvgD()+"]";
+        try {
+            return "[Player: "+ this.getPlayerName()+", PlayerID: "+this.getPlayerID()+", Participation Num: "+this.getNumPart()+", Average duration: "+this.getAvgD()+"]";
+        } catch (Exception e) {
+            throw new RuntimeException("The duration time is Empty at the player object!!");
+        }
     }
 }
