@@ -98,7 +98,7 @@ public class player {
 
     public String toString(){
         try {
-            return "[Player: "+ this.getPlayerName()+", PlayerID: "+this.getPlayerID()+", Participation Num: "+this.getNumPart()+", Average duration: "+this.getAvgD()+"]";
+            return "[Player: "+ this.getPlayerName()+", PlayerID: "+this.getPlayerID()+", Participation Num: "+this.getNumPart()+", Average duration(m): "+this.getAvgD()+"]";
         } catch (Exception e) {
             throw new RuntimeException("The duration time is Empty at the player object!!");
         }

@@ -138,11 +138,13 @@ public class winnerFinder {
         }
         int bestTime = treeMap.firstEntry().getValue().getAvgD();
         for (Map.Entry<String,player> element: treeMap.entrySet()){
-            if(element.getValue().getAvgD() ==bestTime){
-                System.out.println(element.getValue());
-            //Once the given duration time becomes bigger than the least one, then break out of the loop!
-            }else if(element.getValue().getAvgD()>bestTime){
-                break;
+            if (element.getValue().getNumPart() == 3) { //Consider only those who participated with all events/tournaments !!!
+                if (element.getValue().getAvgD() == bestTime) {
+                    System.out.println(element.getValue());
+                    //Once the given duration time becomes bigger than the least one, then break out of the loop!
+                } else if (element.getValue().getAvgD() > bestTime) {
+                    break;
+                }
             }
         }
         System.out.println();
