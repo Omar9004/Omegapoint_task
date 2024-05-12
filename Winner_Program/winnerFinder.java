@@ -13,17 +13,18 @@ public class winnerFinder {
         errorLog = new ArrayList<>();
     }
     /**
-    * This method ensures that the given player info matches the input format condition.
+    * This method ensures that the given player info matches the input format conditions.
     * @param playerInfo
     *         An array type that contains a player info
     * @param hashMap
     *       hashMap that contains the record of the pre-saved players.
     *
     * */
-    public void specsCheck(String[] playerInfo, HashMap<String,player> hashMap){
-//        if (playerInfo.length != 5) {
-//            throw new IllegalArgumentException("Entry is not correctly formatted: " + Arrays.toString(playerInfo));
-//        }
+    public boolean specsCheck(String[] playerInfo, HashMap<String,player> hashMap){
+        if (playerInfo.length !=5){
+            errorLog.add("Invalid player info size, the given size is: "+ playerInfo.length);
+            return false;
+        }
         String name = playerInfo[0].trim();
         String ID = playerInfo[1].trim();
         String startTime = playerInfo[2].trim();
@@ -31,38 +32,46 @@ public class winnerFinder {
         String tournament = playerInfo[4].trim();
 
         List<String> events = Arrays.asList("1000m","eggRace","sackRace") ;
-
+        String timeFormat = "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$";
 
         //Check the name content
         if (!name.matches("[a-zA-Z ]+")) {
             this.errorLog.add("Invalid name: " + name);
+            return false;
 //            throw new IllegalArgumentException("Invalid name: " + name);
         }
         //Check the ID content
         if (!ID.matches("\\d+")) {
             this.errorLog.add("ID must contain only digits: " + ID);
 //            throw new IllegalArgumentException("ID must contain only digits: " + ID);
+            return false;
+
         }
-        //Check stating time format
-        try {
-            LocalTime.parse(startTime, DateTimeFormatter.ofPattern("HH:mm:ss"));
-        } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("Invalid time format, should be HH:mm:ss: " + startTime);
+        //Check the stating time format
+        if (!startTime.matches(timeFormat)){
+            errorLog.add("Invalid stating time format, it should be HH:mm:ss: " + startTime);
+            return false;
+
         }
-        //Check ending time format
-        try {
-            LocalTime.parse(endTime, DateTimeFormatter.ofPattern("HH:mm:ss"));
-        } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("Invalid time format, should be HH:mm:ss: " + endTime);
+        //Check the ending time format
+        if (!endTime.matches(timeFormat)){
+            errorLog.add("Invalid ending time format, it should be HH:mm:ss: " + endTime);
+            return false;
         }
+
         if (!events.contains(tournament)){
             this.errorLog.add("Invalid competition type: " + tournament);
 //            throw new IllegalArgumentException("Invalid competition type: " + tournament);
+            return false;
+
         }
         if (hashMap.containsKey(ID) && !hashMap.get(ID).getPlayerName().equals(name)) {
             this.errorLog.add("Duplicate ID with different names: " + ID+ ", the ID is already assigned to this player: "+hashMap.get(ID).getPlayerName());
 //            throw new IllegalArgumentException("Duplicate ID with different names: " + ID+ ", the ID is already assigned to this player: "+hashMap.get(ID).getPlayerName());
+            return false;
+
         }
+        return true;
 
     }
 
@@ -84,8 +93,7 @@ public class winnerFinder {
         while(scanner.hasNext()){
             playerInfo = scanner.nextLine();
             String [] playerInfoS = playerInfo.split(",");
-            if ((playerInfoS.length== 5)){
-                specsCheck(playerInfoS, hashmap);
+            if (specsCheck(playerInfoS, hashmap)){
                 if (!hashmap.containsKey(playerInfoS[1])) {
                     hashmap.put(playerInfoS[1], new player(playerInfoS[0], playerInfoS[1], playerInfoS[2], playerInfoS[3], playerInfoS[4]));
                 }else{
@@ -132,8 +140,8 @@ public class winnerFinder {
         for (Map.Entry<String,player> element: treeMap.entrySet()){
             if(element.getValue().getAvgD() ==bestTime){
                 System.out.println(element.getValue());
-
-            }else if(element.getValue().getAvgD()>bestTime){ //Once the given duration time becomes bigger than the least one, then break out of the loop!
+            //Once the given duration time becomes bigger than the least one, then break out of the loop!
+            }else if(element.getValue().getAvgD()>bestTime){
                 break;
             }
         }
@@ -141,6 +149,9 @@ public class winnerFinder {
     }
 
     public ArrayList<String> getLog(){
+        if (this.errorLog.isEmpty()){
+            System.out.println("The error log list is Empty");
+        }
         return this.errorLog;
     }
 
@@ -148,7 +159,10 @@ public class winnerFinder {
      * Prints out all the error logs of wrong formatted player info that previously appeared during the file's scanning process.
      * */
     public void errorLogPrinter (){
-        System.out.println("Error log during the reading of this file: "+this.path);
+        if (this.errorLog.isEmpty()){
+            System.out.println("The error log list is Empty");
+        }
+        System.out.println("Error log during the reading of this file "+this.path+":");
         for (String error: this.errorLog){
             System.out.println(error);
         }

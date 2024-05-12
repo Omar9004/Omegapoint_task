@@ -11,11 +11,6 @@ public class player {
     private final ArrayList<Integer> durationList;
 
     public player (String playerName, String playerID, String startTime, String endTime, String raceType){
-        /*this.setPlayerName(playerName);
-        this.setPlayerID(playerID);
-        this.setStartTime(startTime);
-        this.setEndTime(endTime);
-        this.setRaceType(raceType);*/
         this.playerName = playerName;
         this.playerID = playerID;
         this.startTime = startTime;
@@ -66,12 +61,21 @@ public class player {
         this.raceType = raceType;
     }
 
+    /**
+     * The method calculates the period between the starting and ending times.
+     * Then, the calculated duration (in minutes) is added to the player's duration list.
+     * @param startTime when the player starts the tournament.
+     * @param endTime when the player finish the tournament.
+     * */
     public void addDuration (String startTime, String endTime){
         Duration duration = Duration.between(LocalTime.parse(startTime), LocalTime.parse(endTime));
         duration = duration.abs();
         this.durationList.add((int)duration.toMinutes());
     }
-
+    /**
+     * This method calculates the player's average duration across all the tournaments that the player participated in.
+     * @return The average duration time, or the first duration from the list if the player only participated in a tournament.
+     * */
     public int getAvgD () throws Exception {
         if (this.durationList.isEmpty()){
             throw new Exception("The duration list is Empty!!");
@@ -90,7 +94,7 @@ public class player {
     }
     public int getNumPart(){
         return this.durationList.size();
-    } // Return the participation number of the player.
+    } // Return the number of participations.
 
     public String toString(){
         try {
